@@ -9,11 +9,17 @@
  * License:GPL2
  */
 
+define( 'VE_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 
-require_once("./ec.php");
+require_once (VE_PLUGIN_PATH."ec.php");
+
 use \Fotaxis\EC;
 
-$election= new EC();
+add_action('init','construct_my_class');
+
+function construct_my_class(){
+	$election= new EC();	
+}
 
 
 
