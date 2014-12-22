@@ -6,7 +6,7 @@ class EC
 {
     
     function __construct() {
-        
+		
         $this->installDB();
 
         add_action('admin_enqueue_scripts',array($this,'loadStyle'));
@@ -63,7 +63,7 @@ class EC
     }
     
     function installDB() {
-
+    	
         global $wpdb;
         $table_name = $wpdb->prefix . "ve_elections";
         
@@ -73,12 +73,16 @@ class EC
         	id int NOT NULL AUTO_INCREMENT,
         	time timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
         	name text NOT NULL,
+        	seats text,
+        	is_active tinyint(1) DEFAULT 0,
   			UNIQUE KEY id (id)
 			) $charset_collate;";
         
         require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
         dbDelta($sql);
 
+
+        //add update logic later
     }
 }
 ?>
