@@ -52,7 +52,7 @@ class EC
     
     function load_admin() {
         $adm= new EvAdmin();
-        $adm->newElectionForm();
+        //$adm->newElectionForm();
 
     }
     function loadStyle(){
@@ -63,7 +63,7 @@ class EC
     }
     
     function installDB() {
-    	
+
         global $wpdb;
         $table_name = $wpdb->prefix . "ve_elections";
         

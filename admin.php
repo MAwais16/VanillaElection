@@ -5,18 +5,23 @@ class EvAdmin
 {	
 	function __construct() {
 			$this->requestHandler();
+
+			$this->newElectionForm();
+
+			include (VE_PLUGIN_PATH."forms/electionList.php");
 	}
 	
 
 	function newElectionForm(){
 		include (VE_PLUGIN_PATH."forms/newelection.php");
+
 	}
 
 	function requestHandler(){
 		global $wpdb;
 
 		if(isset($_POST['post_newElection']) && $_POST['post_newElection']==1){
-
+			
 			$table_name = $wpdb->prefix . "ve_elections";
         	$wpdb->insert($table_name, 
 				array('name' => $_POST['name'],'seats'=>$_POST['seats'])
