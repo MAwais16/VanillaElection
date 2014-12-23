@@ -12,7 +12,7 @@ class EvAdmin
 
 			include (VE_PLUGIN_PATH."forms/electionList.php");
 	}
-	
+
 	function newElectionForm(){
 		include (VE_PLUGIN_PATH."forms/newelection.php");
 	}
@@ -36,8 +36,9 @@ class EvAdmin
 		}else if(isset($_POST['post_listElection'])){
 
 			$electionId=$_POST['id'];
-			if($_POST['post_listElection']=="del"){
 
+			if($_POST['post_listElection']=="del"){
+				$this->deleteElection($electionId);
 			}else if($_POST['post_listElection']=="activate"){
 				$this->updateElectionActive($electionId,1);
 			}else if($_POST['post_listElection']=="deactivate"){
@@ -52,9 +53,8 @@ class EvAdmin
 
 		$result=$wpdb->update($table_name,
 			array('is_active' => $is_active),
-			array( 'id' => id )
-		);
-
+			array( 'id' => $id )
+		);		
 		if($result===false){
 			$this->notifyError("Error! unable to update election.");
 		}else{
@@ -70,12 +70,12 @@ class EvAdmin
 	function notifyUpdate($txt){
 		echo '
         		<div class="updated">
-        		<p>$txt</p>
+        		<p>'.$txt.'</p>
     			</div>';
 	}
 	function notifyError($txt){
 		echo '  <div class="error">
-        		<p>$txt</p>
+        		<p>'.$txt.'</p>
     			</div>';
 	}
 

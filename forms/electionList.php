@@ -4,7 +4,7 @@
 	<h1>Election List
         <span></span>
     </h1>
-	<input type="hidden" name="post_listElection" value="1"/>
+	<input type="hidden" name="post_listElection" id="post_listElection" value="1"/>
 	<input type="hidden" name="id" id="id" value="-1"/>
 <?php
 global $wpdb;

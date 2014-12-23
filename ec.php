@@ -43,7 +43,7 @@ class EC
     function register_ec_menu() {
         add_menu_page('Elections', 'Elections', 'edit_posts', 've_menu_home', array($this, 'load_home'));
         
-        add_submenu_page("ve_menu_home", "Admin Settings", "Admin Settings", "activate_plugins", "ve_menu_admin", array($this, 'load_admin'));
+        add_submenu_page("ve_menu_home", "Election Commision", "Election Commision", "activate_plugins", "ve_menu_admin", array($this, 'load_admin'));
     }
     
     function load_home() {
