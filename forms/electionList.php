@@ -18,19 +18,20 @@ $result = $wpdb->get_results("SELECT * FROM $table_name");
 			<th>id</th>
 			<th>name</th>
 			<th>seats</th>
-			<th>creation date</th>
-			<th>Act/Deact</th>
+			<th>created</th>
+			<th>act/deact</th>
+			<th>delete</th>
 		</tr>
-	</thead> 
+	</thead>
 
 <?php
 foreach ($result as $row) {
     echo "<tr>";
-    echo "<td>" . $row->id . "<td>" . "<td>" . $row->name . "<td>" . "<td>" . $row->seats . "<td>" . "<td class='cTime'>" . $row->time . "<td>";
+    echo "<td>" . $row->id . "</td>" . "<td>" . $row->name . "</td>" . "<td>" . $row->seats . "</td>" . "<td class='cTime'>" . $row->time . "</td>";
     if ($row->is_active == 0) {
-        echo "<td><input type='button' value='Activate' onclick='activate($row->id);' class='button'/><td>";
+        echo "<td><input type='button' value='Activate' onclick='activate($row->id);' class='button'/></td>";
     }else{
-    	echo "<td><input type='button' value='Deactivate' onclick='deactivate($row->id);' class='button'/><td>";
+    	echo "<td><input type='button' value='Deactivate' onclick='deactivate($row->id);' class='button'/></td>";
     }
     echo "<td><input type='button' value='Delete' onclick='del($row->id);' class='button' style='border-color:#e74e4e;'/></td>";
     echo "</tr>";

@@ -1,5 +1,4 @@
-<div>
-
+<br/><br/><div>
 	<form action="" method="POST" class="basic-grey">
 		<input type="hidden" name="post_newElection" value="1"/>
     <h1>New Election
