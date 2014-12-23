@@ -56,15 +56,26 @@ class EvAdmin
 			array( 'id' => $id )
 		);		
 		if($result===false){
-			$this->notifyError("Error! unable to update election.");
+			$this->notifyError("Error!".$wpdb->print_error());
 		}else{
 			$this->notifyUpdate("Updated rows:$result");
 		}
 
 	}	
 
-	function deleteElection(){
+	function deleteElection($id){
+		global $wpdb;
+		$table_name = $wpdb->prefix . "ve_elections";
 
+		$sql=$wpdb->prepare( "delete FROM $table_name WHERE id = %d", $id );
+		$result=$wpdb->query($sql);
+		if($result===false){
+			$this->notifyError("Error!".$wpdb->print_error());
+		}else{
+			$this->notifyUpdate("Updated rows:$result");
+		}
+
+		
 	}
 
 	function notifyUpdate($txt){

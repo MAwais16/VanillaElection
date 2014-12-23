@@ -6,7 +6,7 @@
     </h1>
     <label>
         <span>Election Title :</span>
-        <input id="name" type="text" name="name" placeholder="Your Full Name" />
+        <input id="name" type="text" name="name" placeholder="Election Title" />
     </label>
 
     <label>

@@ -12,7 +12,7 @@ $table_name = $wpdb->prefix . "ve_elections";
 $result = $wpdb->get_results("SELECT * FROM $table_name");
 ?>
 
-<table>
+<table class="electionListTable">
 	<thead>
 		<tr>
 			<th>id</th>

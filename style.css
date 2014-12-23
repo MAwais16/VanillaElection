@@ -87,3 +87,11 @@
 .basic-grey .button:hover {
     background: #CF7A7A
 }*/
+
+
+
+
+.electionListTable{
+    border:1px solid #c9c9c9;
+    width: 100%;
+}
