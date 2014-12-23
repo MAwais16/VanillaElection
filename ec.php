@@ -9,7 +9,7 @@ class EC
 		
         $this->installDB();
 
-        add_action('admin_enqueue_scripts',array($this,'loadStyle'));
+        add_action('admin_enqueue_scripts',array($this,'loadScripts'));
 
         add_action('admin_menu', array($this, 'register_ec_menu'));
 
@@ -55,11 +55,14 @@ class EC
         //$adm->newElectionForm();
 
     }
-    function loadStyle(){
+    function loadScripts(){
     	
     	wp_register_style( 'VeFormCss', VE_PLUGIN_URL.'style.css');
 		wp_enqueue_style( 'VeFormCss' );
 		//wp_enqueue_style( 'VeFormCss' );
+
+		wp_register_script( 'momentjs', VE_PLUGIN_URL.'moment.min.js');
+		wp_enqueue_script('momentjs');
     }
     
     function installDB() {
