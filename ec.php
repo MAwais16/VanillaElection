@@ -1,6 +1,7 @@
 <?php
 namespace Fotaxis;
 require_once (VE_PLUGIN_PATH."admin.php");
+require_once (VE_PLUGIN_PATH."normal.php");
 
 class EC
 {
@@ -47,7 +48,8 @@ class EC
     }
     
     function load_home() {
-        include (VE_PLUGIN_PATH . "home.php");
+        //include (VE_PLUGIN_PATH . "normal.php");
+         $nu= new NormalUser();
     }
     
     function load_admin() {
@@ -77,6 +79,7 @@ class EC
         	time timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
         	name text NOT NULL,
         	seats text,
+        	nomination text,
         	is_active tinyint(1) DEFAULT 0,
   			UNIQUE KEY id (id)
 			) $charset_collate;";
@@ -84,8 +87,21 @@ class EC
         require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
         dbDelta($sql);
 
-
         //add update logic later
     }
+
+    static function notifyUpdate($txt){
+		echo '
+        		<div class="updated">
+        		<p>'.$txt.'</p>
+    			</div>';
+	}
+	static function notifyError($txt){
+		echo '  <div class="error">
+        		<p>'.$txt.'</p>
+    			</div>';
+	}
+
+
 }
 ?>

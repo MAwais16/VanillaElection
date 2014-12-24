@@ -8,9 +8,11 @@ class EvAdmin
 	function __construct() {
 
 			$this->requestHandler();
-			$this->newElectionForm();
+			//$this->newElectionForm();
 
+			include (VE_PLUGIN_PATH."forms/newelection.php");
 			include (VE_PLUGIN_PATH."forms/electionList.php");
+
 	}
 
 	function newElectionForm(){
