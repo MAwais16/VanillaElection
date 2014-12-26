@@ -106,6 +106,9 @@
     font-size: 11px;
 }
 
+.basic-grey>p{
+    padding-left:40px;
+}
 
 .basic-grey .customTable{
     border:1px solid #c9c9c9;
@@ -117,6 +120,7 @@
 
 .basic-grey .nominee{
     /*display: inline;*/
+    padding-left:40px;
 }
 
 .nominee>.card{

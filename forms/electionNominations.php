@@ -37,7 +37,35 @@ if ($elec !== false) {
 <?php
 
     }//foreach seats
-    
+    ?>
+<br/>
+<form class="basic-grey">
+	<h2>Your Nomination
+        <span></span>
+    </h2>
+    	<?php
+    	$myNomination =$this->getMyNomination($elec->id);
+		if($myNomination!==false){
+
+			echo '<label><span>Seat Title: '.$myNomination[0]->title.'</label>';
+			echo '<label><span>Status: ';
+			if($myNomination[0]->status=="0"){
+				echo "Pending... (waiting for approval)";
+			}else{
+				echo "Approved!";
+			}
+			echo "</label>";
+			echo "<label><span></span><button class='button'>Cancel Nomination</button></label>";
+			
+		}else{
+			echo "none";
+		}
+		
+		?>
+</form>
+
+
+<?php
 } //if
 
 ?>

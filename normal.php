@@ -21,6 +21,19 @@ class NormalUser
             return false;
         }
     }
+
+    function getMyNomination($election_id){
+        global $wpdb;
+        $table_nom = $wpdb->prefix . "ve_nominations";
+        $table_seats = $wpdb->prefix . "ve_seats";
+        $user_id=get_current_user_id();
+        $result = $wpdb->get_results("SELECT * FROM $table_nom join $table_seats on $table_nom.seat_id=$table_seats.id where $table_nom.user_id=$user_id");
+        if ($wpdb->num_rows <= 0) {
+            $result = false;
+        }
+        return $result;
+
+    }
     
     function getSeats($seatIds) {
         global $wpdb;
@@ -51,7 +64,7 @@ class NormalUser
     function getElectionNominations($election_id, $seat_id) {
         global $wpdb;
         $table_name = $wpdb->prefix . "ve_nominations";
-        $result = $wpdb->get_results("SELECT * FROM $table_name WHERE status=1 AND election_id=$election_id AND $seat_id=seat_id");
+        $result = $wpdb->get_results("SELECT * FROM $table_name WHERE status=1 AND election_id=$election_id AND seat_id=$seat_id");
         if ($wpdb->num_rows <= 0) {
             $result = false;
         }
