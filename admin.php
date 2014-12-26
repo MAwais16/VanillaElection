@@ -70,6 +70,11 @@ class EvAdmin
 				$title=$_POST['title'];
 				$table_name = $wpdb->prefix . "ve_seats";
 				$wpdb->insert($table_name,array('title' => $title));
+				if($wpdb->insert_id>0){
+        			EC::notifyUpdate("Saved");
+        		}else{
+        			EC::notifyError("Something went wrong!");
+        		}
 			}
 			else if($_POST['admin_seat']=="delete"){
 				$deletId=$_POST['admin_seat_id'];

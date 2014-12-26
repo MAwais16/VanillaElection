@@ -22,12 +22,27 @@
     display: block;
     border-bottom:1px solid #E4E4E4;
     margin: -10px -15px 30px -10px;;
-    color: #888;
+    color: #575757;
 }
 .basic-grey h1>span {
     display: block;
     font-size: 11px;
+    color:#888;
 }
+
+.basic-grey h2 {
+    font-size: 18px;
+    padding: 0px 0px 10px 40px;
+    display: block;
+    border-bottom:1px solid #E4E4E4;
+    margin: -10px -15px 30px -10px;;
+    color: #888;
+}
+.basic-grey h2>span {
+    display: block;
+    font-size: 11px;
+}
+
 .basic-grey label {
     display: block;
     margin: 0px;

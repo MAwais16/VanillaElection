@@ -1,11 +1,11 @@
 <br/>
 <br/>
 <form action="" method="POST" class="basic-grey">
-	<input type="hidden" name="normal_nominate" value="1"/>
+	<input type="hidden" name="normal_nominate" value="add"/>
 
 <?php
 
-$elec=$this->getActiveElection();
+$elec=$this->getLatestActiveElection();
     if($elec!==false){
         echo "<h1>".$elec->name."<span>Nominate Yourself</span></h1>";
 
@@ -21,7 +21,6 @@ $elec=$this->getActiveElection();
             $seatId=$seat->id;
             echo "<option value='$seatId'>$seatTitle</option>";
         }
-
         echo "</select></label>";
     }
 

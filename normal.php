@@ -6,36 +6,56 @@ class NormalUser
     function __construct() {
         $this->requestHandler();
         
-        //include (VE_PLUGIN_PATH . "forms/electionNominations.php");
-
-
+        include (VE_PLUGIN_PATH . "forms/electionNominations.php");
         include (VE_PLUGIN_PATH . "forms/nominateMe.php");
-    }
-    
-    function getActiveElection(){
-        global $wpdb;
-        $table_name = $wpdb->prefix . "ve_elections";
-        $result=$wpdb->get_results("SELECT * FROM $table_name where is_active=1 order by id DESC limit 1");
-        if(count($result)==1){
-            return $result[0];
-        }else{
-            return false;
-        }
         
     }
-
-    function getSeats($seatIds){
+    
+    function getLatestActiveElection() {
+        global $wpdb;
+        $table_name = $wpdb->prefix . "ve_elections";
+        $result = $wpdb->get_results("SELECT * FROM $table_name where is_active=1 order by id DESC limit 1");
+        if (count($result) == 1) {
+            return $result[0];
+        } else {
+            return false;
+        }
+    }
+    
+    function getSeats($seatIds) {
         global $wpdb;
         $table_name = $wpdb->prefix . "ve_seats";
         return $wpdb->get_results("SELECT * FROM $table_name where id IN ($seatIds);");
-
     }
-
+    
     function requestHandler() {
-        
-        if (isset($_POST['normal_nominate']) && $_POST['normal_nominate'] == 1) {
-            //$this->saveNomination();
+        global $wpdb;
+        $wpdb->hide_errors();
+        if (isset($_POST['normal_nominate'])) {
+            if ($_POST['normal_nominate'] == "add") {
+                
+                $id = $_POST['eid'];
+                $dd_seat = $_POST['dd_seat'];
+                $user_id = get_current_user_id();
+                $table_name = $wpdb->prefix . "ve_nominations";
+                $wpdb->insert($table_name, array('seat_id' => $dd_seat, 'election_id' => $id, 'user_id' => $user_id));
+                if ($wpdb->insert_id > 0) {
+                    EC::notifyUpdate("Nominated, Waiting for Approval, Once nominated you will appear in nomination list of the election.");
+                } else {
+                    EC::notifyError("Unable to nominate");
+                }
+            }
         }
+    }
+    
+    function getElectionNominations($election_id, $seat_id) {
+        global $wpdb;
+        $table_name = $wpdb->prefix . "ve_nominations";
+        $result = $wpdb->get_results("SELECT * FROM $table_name WHERE status=1 AND election_id=$election_id AND $seat_id=seat_id");
+        if ($wpdb->num_rows <= 0) {
+            $result = false;
+        }
+        return $result;
     }
     
     function saveNomination() {
