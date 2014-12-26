@@ -2,38 +2,32 @@
 <br/>
 <form action="" method="POST" class="basic-grey">
 	<input type="hidden" name="normal_nominate" value="1"/>
-	
-
 
 <?php
 
-global $wpdb;
-$table_name = $wpdb->prefix . "ve_elections";
-$result = $wpdb->get_results("SELECT * FROM $table_name where is_active=1 order by id DESC limit 1");
-foreach ($result as $row) {
-?>
-	<h1><?php echo $row->name;?>
-        <span>Nominate Yourself</span>
-    </h1>
-<?php
+$elec=$this->getActiveElection();
+    if($elec!==false){
+        echo "<h1>".$elec->name."<span>Nominate Yourself</span></h1>";
 
-    $seats = explode(",", $row->seats);
-    echo '<input type="hidden" name="eid" value="'.$row->id.'"/>';
-    
-    echo "<label>
-        <span>Choose Seat:</span>";
-    echo "<select name='dd_seat'>";
+        $electionSeats=$this->getSeats($elec->seats);
+        
+        echo '<input type="hidden" name="eid" value="'.$elec->id.'"/>';
+        echo "<label>
+            <span>Choose Seat:</span>";
+        echo "<select name='dd_seat'>";
 
-    foreach($seats as $seat){
-    	$seat=trim($seat);
-    	echo "<option value='$seat'>$seat</option>";
+        foreach($electionSeats as $seat){
+            $seatTitle=trim($seat->title);
+            $seatId=$seat->id;
+            echo "<option value='$seatId'>$seatTitle</option>";
+        }
+
+        echo "</select></label>";
     }
-    echo "</select></label>";
-}?>
 
+?>
 	<label>
         <span>&nbsp;</span> 
         <input type="submit" value="Nominate Me" class='button'/> 
 	</label>  
 </form>
-	

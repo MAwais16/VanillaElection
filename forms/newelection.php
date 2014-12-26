@@ -11,7 +11,17 @@
 
     <label>
         <span>Election Seats:</span>
-        <input id="seats" type="text" name="seats" title="comma seperated" placeholder="comma seperated" value="President,Vice President,General Secretary,Finance Secretary,Information Secretary,Internation Relation Secretary"/>
+        <?php
+        $result=$this->getAllSeats(); //admin.php
+        if($result){
+            echo "<select name='seats[]' multiple='multiple'>";
+            foreach ($result as $seat) {
+                echo "<option value='".$seat->id."'>".$seat->title."</option>";
+            }
+            echo "</select>";
+        }
+        ?>
+        <!-- <input id="seats" type="text" name="seats" title="comma seperated" placeholder="comma seperated" value="President,Vice President,General Secretary,Finance Secretary,Information Secretary,Internation Relation Secretary"/> -->
     </label>
     
      <label>

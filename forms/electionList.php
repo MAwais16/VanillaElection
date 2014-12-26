@@ -9,10 +9,11 @@
 <?php
 global $wpdb;
 $table_name = $wpdb->prefix . "ve_elections";
+
 $result = $wpdb->get_results("SELECT * FROM $table_name");
 ?>
 
-<table class="electionListTable">
+<table class="customTable">
 	<thead>
 		<tr>
 			<th>id</th>

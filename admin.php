@@ -10,8 +10,25 @@ class EvAdmin
 			$this->requestHandler();
 			//$this->newElectionForm();
 
-			include (VE_PLUGIN_PATH."forms/newelection.php");
+			include (VE_PLUGIN_PATH."forms/seat.php");
+			include (VE_PLUGIN_PATH."forms/newElection.php");
 			include (VE_PLUGIN_PATH."forms/electionList.php");
+
+	}
+
+	function addSeat(){
+
+	}
+
+	function getAllSeats(){
+
+		global $wpdb;
+		$table_name = $wpdb->prefix . "ve_seats";
+		$result = $wpdb->get_results("SELECT * FROM $table_name");
+		return $result;
+	}
+
+	function getSeat($id){
 
 	}
 
@@ -24,15 +41,16 @@ class EvAdmin
 
 		if(isset($_POST['post_newElection']) && $_POST['post_newElection']==1){
 
+			$comma_seats = implode(",", $_POST['seats']);
 			$table_name = $wpdb->prefix . "ve_elections";
         	$wpdb->insert($table_name, 
-				array('name' => $_POST['name'],'seats'=>$_POST['seats'])
+				array('name' => $_POST['name'],'seats'=>$comma_seats)
 			);
 
         	if($wpdb->insert_id>0){
-        		$this->notifyUpdate("Saved");
+        		EC::notifyUpdate("Saved");
         	}else{
-        		$this->notifyError("Something went wrong!");
+        		EC::notifyError("Something went wrong!");
         	}
 
 		}else if(isset($_POST['post_listElection'])){
@@ -46,7 +64,27 @@ class EvAdmin
 			}else if($_POST['post_listElection']=="deactivate"){
 				$this->updateElectionActive($electionId,0);
 			}
-		}
+		}else if(isset($_POST['admin_seat'])){
+			
+			if($_POST['admin_seat']=="addseat"){
+				$title=$_POST['title'];
+				$table_name = $wpdb->prefix . "ve_seats";
+				$wpdb->insert($table_name,array('title' => $title));
+			}
+			else if($_POST['admin_seat']=="delete"){
+				$deletId=$_POST['admin_seat_id'];
+				$table_name = $wpdb->prefix . "ve_seats";
+
+				$sql=$wpdb->prepare("delete FROM $table_name WHERE id = %d", $deletId);
+				$result=$wpdb->query($sql);
+				if($result===false){
+					EC::notifyError("Error!".$wpdb->print_error());
+				}else{
+					EC::notifyUpdate("Updated rows:$result");
+				}
+			}
+		}//for admin_seat
+
 	}
 
 	function updateElectionActive($id,$is_active){
@@ -58,9 +96,9 @@ class EvAdmin
 			array( 'id' => $id )
 		);		
 		if($result===false){
-			$this->notifyError("Error!".$wpdb->print_error());
+			EC::notifyError("Error!".$wpdb->print_error());
 		}else{
-			$this->notifyUpdate("Updated rows:$result");
+			EC::notifyUpdate("Updated rows:$result");
 		}
 
 	}	
@@ -72,9 +110,9 @@ class EvAdmin
 		$sql=$wpdb->prepare( "delete FROM $table_name WHERE id = %d", $id );
 		$result=$wpdb->query($sql);
 		if($result===false){
-			$this->notifyError("Error!".$wpdb->print_error());
+			EC::notifyError("Error!".$wpdb->print_error());
 		}else{
-			$this->notifyUpdate("Updated rows:$result");
+			EC::notifyUpdate("Updated rows:$result");
 		}
 
 		

@@ -1,20 +1,21 @@
 <?php
 namespace Fotaxis;
-require_once (VE_PLUGIN_PATH."admin.php");
-require_once (VE_PLUGIN_PATH."normal.php");
+require_once (VE_PLUGIN_PATH . "admin.php");
+require_once (VE_PLUGIN_PATH . "normal.php");
 
 class EC
 {
     
     function __construct() {
-		
+        
         $this->installDB();
-
-        add_action('admin_enqueue_scripts',array($this,'loadScripts'));
-
+        
+        add_action('admin_enqueue_scripts', array($this, 'loadScripts'));
+        
         add_action('admin_menu', array($this, 'register_ec_menu'));
-
+        
         //$this->addMenus();
+        
     }
     
     function addMenus() {
@@ -35,11 +36,8 @@ class EC
             
             
         }
-
+        
         add_action('admin_menu', array($this, 'register_ec_menu'));
-        
-        
-        
     }
     function register_ec_menu() {
         add_menu_page('Elections', 'Elections', 'edit_posts', 've_menu_home', array($this, 'load_home'));
@@ -48,60 +46,72 @@ class EC
     }
     
     function load_home() {
+        
         //include (VE_PLUGIN_PATH . "normal.php");
-         $nu= new NormalUser();
+        $nu = new NormalUser();
     }
     
     function load_admin() {
-        $adm= new EvAdmin();
+        $adm = new EvAdmin();
+        
         //$adm->newElectionForm();
-
+        
+        
     }
-    function loadScripts(){
-    	
-    	wp_register_style( 'VeFormCss', VE_PLUGIN_URL.'style.css');
-		wp_enqueue_style( 'VeFormCss' );
-		//wp_enqueue_style( 'VeFormCss' );
-
-		wp_register_script( 'momentjs', VE_PLUGIN_URL.'moment.min.js');
-		wp_enqueue_script('momentjs');
+    function loadScripts() {
+        
+        wp_register_style('VeFormCss', VE_PLUGIN_URL . 'style.css');
+        wp_enqueue_style('VeFormCss');
+        
+        //wp_enqueue_style( 'VeFormCss' );
+        
+        wp_register_script('momentjs', VE_PLUGIN_URL . 'moment.min.js');
+        wp_enqueue_script('momentjs');
     }
     
     function installDB() {
-
+        
         global $wpdb;
         $table_name = $wpdb->prefix . "ve_elections";
         
         $charset_collate = $wpdb->get_charset_collate();
         
         $sql = "CREATE TABLE $table_name (
-        	id int NOT NULL AUTO_INCREMENT,
-        	time timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
-        	name text NOT NULL,
-        	seats text,
-        	nomination text,
-        	is_active tinyint(1) DEFAULT 0,
-  			UNIQUE KEY id (id)
-			) $charset_collate;";
+            id int NOT NULL AUTO_INCREMENT,
+            time timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+            name text NOT NULL,
+            seats text,
+            nomination text,
+            is_active tinyint(1) DEFAULT 0,
+            UNIQUE KEY id (id)
+            ) $charset_collate;";
+        
+        $table_name = $wpdb->prefix . "ve_seats";
+        $sql2 = "CREATE TABLE $table_name (
+            id int NOT NULL AUTO_INCREMENT,
+            time timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+            title text NOT NULL,
+            UNIQUE KEY id (id)
+            ) $charset_collate;";
         
         require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
         dbDelta($sql);
-
+        dbDelta($sql2);
+        
         //add update logic later
+        
     }
-
-    static function notifyUpdate($txt){
-		echo '
-        		<div class="updated">
-        		<p>'.$txt.'</p>
-    			</div>';
-	}
-	static function notifyError($txt){
-		echo '  <div class="error">
-        		<p>'.$txt.'</p>
-    			</div>';
-	}
-
-
+    
+    static function notifyUpdate($txt) {
+        echo '
+                <div class="updated">
+                <p>' . $txt . '</p>
+                </div>';
+    }
+    static function notifyError($txt) {
+        echo '  <div class="error">
+                <p>' . $txt . '</p>
+                </div>';
+    }
 }
 ?>

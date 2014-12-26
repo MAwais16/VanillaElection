@@ -5,18 +5,36 @@ class NormalUser
 {
     function __construct() {
         $this->requestHandler();
-        $this->getCandidates();
         
+        //include (VE_PLUGIN_PATH . "forms/electionNominations.php");
+
+
         include (VE_PLUGIN_PATH . "forms/nominateMe.php");
     }
     
-    function getCandidates() {
+    function getActiveElection(){
+        global $wpdb;
+        $table_name = $wpdb->prefix . "ve_elections";
+        $result=$wpdb->get_results("SELECT * FROM $table_name where is_active=1 order by id DESC limit 1");
+        if(count($result)==1){
+            return $result[0];
+        }else{
+            return false;
+        }
+        
     }
-    
+
+    function getSeats($seatIds){
+        global $wpdb;
+        $table_name = $wpdb->prefix . "ve_seats";
+        return $wpdb->get_results("SELECT * FROM $table_name where id IN ($seatIds);");
+
+    }
+
     function requestHandler() {
         
         if (isset($_POST['normal_nominate']) && $_POST['normal_nominate'] == 1) {
-            $this->saveNomination();
+            //$this->saveNomination();
         }
     }
     
