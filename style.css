@@ -148,3 +148,7 @@
 .nominee>.card>.username{
     text-align: center;
 } 
+
+.basic-grey .redBorder{
+    border-color: #e74e4e;
+}

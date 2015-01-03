@@ -14,11 +14,51 @@ class EvAdmin
 			include (VE_PLUGIN_PATH."forms/newElection.php");
 			include (VE_PLUGIN_PATH."forms/electionList.php");
 
-	}
-
-	function addSeat(){
+			include (VE_PLUGIN_PATH."forms/nominees.php");
 
 	}
+
+	function getLatestActiveElection() {
+        global $wpdb;
+        $table_name = $wpdb->prefix . "ve_elections";
+        $result = $wpdb->get_results("SELECT * FROM $table_name where is_active=1 order by id DESC limit 1");
+        if (count($result) == 1) {
+            return $result[0];
+        } else {
+            return false;
+        }
+    }
+
+    function getNominations($election_id) {
+        global $wpdb;
+        $table_nom = $wpdb->prefix . "ve_nominations";
+        $table_seats = $wpdb->prefix . "ve_seats";
+        $result = $wpdb->get_results("SELECT * FROM $table_nom join $table_seats on $table_nom.seat_id=$table_seats.id where $table_nom.election_id=$election_id");
+        if ($wpdb->num_rows <= 0) {
+            $result = false;
+        }
+        return $result;
+    }
+
+    function updateSeatNomination($nomination_id,$status){
+    	global $wpdb;
+		$table_name = $wpdb->prefix . "ve_nominations";
+		
+		$result=$wpdb->update($table_name,
+			array('status' => $status),
+			array( 'id' => $nomination_id),
+			array('%d'),
+			array('%d')
+		);
+
+		if($result===false){
+			EC::notifyError("Error!".$wpdb->print_error());
+		}else{
+			EC::notifyUpdate("Updated rows:$result");
+		}
+		wp_die($wpdb->last_query);
+
+    }
 
 	function getAllSeats(){
 
@@ -26,10 +66,6 @@ class EvAdmin
 		$table_name = $wpdb->prefix . "ve_seats";
 		$result = $wpdb->get_results("SELECT * FROM $table_name");
 		return $result;
-	}
-
-	function getSeat($id){
-
 	}
 
 	function newElectionForm(){
@@ -88,7 +124,14 @@ class EvAdmin
 					EC::notifyUpdate("Updated rows:$result");
 				}
 			}
-		}//for admin_seat
+		}else if(isset($_POST['admin_nominees'])){
+			if($_POST['admin_nominees']=="accept"){
+				$this->updateSeatNomination($_POST['admin_nominee_id'],1);
+			}else if($_POST['admin_nominees']=="reject"){
+				$this->updateSeatNomination($_POST['admin_nominee_id'],0);
+			}
+
+		}
 
 	}
 
@@ -120,7 +163,6 @@ class EvAdmin
 			EC::notifyUpdate("Updated rows:$result");
 		}
 
-		
 	}
 
 	function notifyUpdate($txt){

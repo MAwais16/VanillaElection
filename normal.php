@@ -8,7 +8,6 @@ class NormalUser
         
         include (VE_PLUGIN_PATH . "forms/electionNominations.php");
         include (VE_PLUGIN_PATH . "forms/nominateMe.php");
-        
     }
     
     function getLatestActiveElection() {
@@ -21,18 +20,17 @@ class NormalUser
             return false;
         }
     }
-
-    function getMyNomination($election_id){
+    
+    function getMyNomination($election_id) {
         global $wpdb;
         $table_nom = $wpdb->prefix . "ve_nominations";
         $table_seats = $wpdb->prefix . "ve_seats";
-        $user_id=get_current_user_id();
-        $result = $wpdb->get_results("SELECT * FROM $table_nom join $table_seats on $table_nom.seat_id=$table_seats.id where $table_nom.user_id=$user_id");
+        $user_id = get_current_user_id();
+        $result = $wpdb->get_results("SELECT * FROM $table_nom join $table_seats on $table_nom.seat_id=$table_seats.id where $table_nom.user_id=$user_id AND $table_nom.election_id=$election_id");
         if ($wpdb->num_rows <= 0) {
             $result = false;
         }
         return $result;
-
     }
     
     function getSeats($seatIds) {
@@ -43,19 +41,32 @@ class NormalUser
     
     function requestHandler() {
         global $wpdb;
+        $user_id = get_current_user_id();
         $wpdb->hide_errors();
         if (isset($_POST['normal_nominate'])) {
             if ($_POST['normal_nominate'] == "add") {
                 
                 $id = $_POST['eid'];
                 $dd_seat = $_POST['dd_seat'];
-                $user_id = get_current_user_id();
+                
                 $table_name = $wpdb->prefix . "ve_nominations";
                 $wpdb->insert($table_name, array('seat_id' => $dd_seat, 'election_id' => $id, 'user_id' => $user_id));
                 if ($wpdb->insert_id > 0) {
                     EC::notifyUpdate("Nominated, Waiting for Approval, Once nominated you will appear in nomination list of the election.");
                 } else {
                     EC::notifyError("Unable to nominate");
+                }
+            } else if($_POST['normal_nominate'] == "delete") {
+                
+                $eid = $_POST['eid'];
+                
+                $table_name = $wpdb->prefix . "ve_nominations";
+                $sql = $wpdb->prepare("delete FROM $table_name WHERE election_id = %d AND user_id= %d", $eid, $user_id);
+                $result = $wpdb->query($sql);
+                if ($result === false) {
+                    EC::notifyError("Error!" . $wpdb->print_error());
+                } else {
+                    EC::notifyUpdate("Updated rows:$result");
                 }
             }
         }

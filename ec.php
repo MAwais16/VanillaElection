@@ -25,10 +25,7 @@ class EC
             $current_role = $author->roles[0];
         } else {
             $current_role = 'no_role';
-            
             //wp_die('ouch! something wrong?');
-            
-            
         }
         if ($current_role == 'administrator') {
             

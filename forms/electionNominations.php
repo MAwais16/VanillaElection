@@ -39,11 +39,15 @@ if ($elec !== false) {
     }//foreach seats
     ?>
 <br/>
-<form class="basic-grey">
+<form class="basic-grey" action="" method="post">
+	<input type="hidden" name="normal_nominate" value="delete"/>
+
 	<h2>Your Nomination
         <span></span>
     </h2>
     	<?php
+
+    	echo '<input type="hidden" name="eid" value="'.$elec->id.'"/>';
     	$myNomination =$this->getMyNomination($elec->id);
 		if($myNomination!==false){
 
@@ -55,7 +59,7 @@ if ($elec !== false) {
 				echo "Approved!";
 			}
 			echo "</label>";
-			echo "<label><span></span><button class='button'>Cancel Nomination</button></label>";
+			echo "<label><span></span><input type='submit' class='button redBorder' value='Cancel My Nomination' /></label>";
 			
 		}else{
 			echo "none";
