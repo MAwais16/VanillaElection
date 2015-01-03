@@ -145,6 +145,10 @@
     font-weight: bold;
 }
 
+.nominee>.card>.button{
+    width: 100%;
+}
+
 .nominee>.card>.username{
     text-align: center;
 } 

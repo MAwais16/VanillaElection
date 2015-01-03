@@ -7,13 +7,15 @@ class NormalUser
         $this->requestHandler();
         
         include (VE_PLUGIN_PATH . "forms/electionNominations.php");
+
+        include (VE_PLUGIN_PATH . "forms/myNomination.php");
         include (VE_PLUGIN_PATH . "forms/nominateMe.php");
     }
     
     function getLatestActiveElection() {
         global $wpdb;
         $table_name = $wpdb->prefix . "ve_elections";
-        $result = $wpdb->get_results("SELECT * FROM $table_name where is_active=1 order by id DESC limit 1");
+        $result = $wpdb->get_results("SELECT * FROM $table_name where is_active=1 OR is_active=2 order by id DESC limit 1");
         if (count($result) == 1) {
             return $result[0];
         } else {
@@ -69,7 +71,22 @@ class NormalUser
                     EC::notifyUpdate("Updated rows:$result");
                 }
             }
+        }else if (isset($_POST['normal_castvote'])) {
+           if ($_POST['normal_castvote'] == "castevote") { 
+                $electionId=$_POST['normal_electionId'];
+                $seatId=$_POST['normal_seatId'];
+                $nominationId=$_POST['normal_nominationId'];
+           }
         }
+    }
+
+    function castVote($election_id,$seat_id,$nomination_id){
+
+
+    }
+
+    function alreadyVoted($election_id,$seat_id,$nomination_id){
+        
     }
     
     function getElectionNominations($election_id, $seat_id) {

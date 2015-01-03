@@ -21,6 +21,7 @@ $result = $wpdb->get_results("SELECT * FROM $table_name");
 			<th>seats</th>
 			<th>created</th>
 			<th>act/deact</th>
+			<th>voting</th>
 			<th>delete</th>
 		</tr>
 	</thead>
@@ -31,9 +32,15 @@ foreach ($result as $row) {
     echo "<td>" . $row->id . "</td>" . "<td>" . $row->name . "</td>" . "<td>" . $row->seats . "</td>" . "<td class='cTime'>" . $row->time . "</td>";
     if ($row->is_active == 0) {
         echo "<td><input type='button' value='Activate' onclick='activate($row->id);' class='button'/></td>";
-    }else{
-    	echo "<td><input type='button' value='Deactivate' onclick='deactivate($row->id);' class='button'/></td>";
+    } else {
+        echo "<td><input type='button' value='Deactivate' onclick='deactivate($row->id);' class='button'/></td>";
+        if ($row->is_active == 2) {
+            echo "<td><input type='button' value='Close Voting' onclick='closeVoting($row->id);' class='button'/></td>";
+        } else {
+            echo "<td><input type='button' value='Open Voting' onclick='openVoting($row->id);' class='button'/></td>";
+        }
     }
+    
     echo "<td><input type='button' value='Delete' onclick='del($row->id);' class='button' style='border-color:#e74e4e;'/></td>";
     echo "</tr>";
 }
@@ -49,30 +56,42 @@ foreach ($result as $row) {
 	});
 	
 	function activate(id){
-		jQuery(document).ready(function(){
+		//jQuery(document).ready(function(){
     		jQuery("#post_listElection").val("activate");
     		jQuery("#id").val(id);
     		jQuery("#formElectionList").submit();
-		});
+		//});
 
 	};
 
 	function del(id){
-		jQuery(document).ready(function(){
+		// jQuery(document).ready(function(){
     		if(confirm("Are you sure you want to delete this Election and related data?")){
     			jQuery("#post_listElection").val("del");
     			jQuery("#id").val(id);
     			jQuery("#formElectionList").submit();
     		}
-		});	
+		// });	
 	};
 
 	function deactivate(id){
-		jQuery(document).ready(function(){
+		// jQuery(document).ready(function(){
     		jQuery("#post_listElection").val("deactivate");
     		jQuery("#id").val(id);
     		jQuery("#formElectionList").submit();
-		});	
+		// });	
 	};
+
+	function openVoting(id){
+		jQuery("#post_listElection").val("openvoting");
+    	jQuery("#id").val(id);
+    	jQuery("#formElectionList").submit();
+	}
+
+	function closeVoting(id){
+		jQuery("#post_listElection").val("closevoting");
+    	jQuery("#id").val(id);
+    	jQuery("#formElectionList").submit();
+	}
 
 </script>

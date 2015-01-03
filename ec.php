@@ -16,6 +16,7 @@ class EC
         
         //$this->addMenus();
         
+        
     }
     
     function addMenus() {
@@ -25,7 +26,9 @@ class EC
             $current_role = $author->roles[0];
         } else {
             $current_role = 'no_role';
+            
             //wp_die('ouch! something wrong?');
+            
         }
         if ($current_role == 'administrator') {
             
@@ -90,7 +93,7 @@ class EC
             title text NOT NULL,
             UNIQUE KEY id (id)
             ) $charset_collate;";
-    
+        
         $table_name = $wpdb->prefix . "ve_nominations";
         $sql3 = "CREATE TABLE IF NOT EXISTS $table_name (
             id int NOT NULL AUTO_INCREMENT UNIQUE,
@@ -101,16 +104,29 @@ class EC
             status tinyint(1) DEFAULT 0,
             PRIMARY KEY  (election_id,user_id)
             ) $charset_collate;";
-            // must have double space between primary key and its value to save youself from wp error
-            //http://codex.wordpress.org/Creating_Tables_with_Plugins
         
+        // must have double space between primary key and its value to save youself from wp error
+        //http://codex.wordpress.org/Creating_Tables_with_Plugins
+        
+        $table_name = $wpdb->prefix . "ve_votes";
+        $sql4 = "CREATE TABLE IF NOT EXISTS $table_name(
+            id int NOT NULL AUTO_INCREMENT UNIQUE,
+            time timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+            user_id int NOT NULL,
+            seat_id int NOT NULL,
+            election_id int NOT NULL,
+            nomination_id int NOT NULL,
+            PRIMARY KEY  (election_id,user_id,seat_id)
+            ) $charset_collate;";
+
         require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
+
         dbDelta($sql);
         dbDelta($sql2);
         dbDelta($sql3);
-        
+        dbDelta($sql4);
         //add update logic later
-        
+
     }
     
     static function notifyUpdate($txt) {

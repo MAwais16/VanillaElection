@@ -21,7 +21,7 @@ class EvAdmin
 	function getLatestActiveElection() {
         global $wpdb;
         $table_name = $wpdb->prefix . "ve_elections";
-        $result = $wpdb->get_results("SELECT * FROM $table_name where is_active=1 order by id DESC limit 1");
+        $result = $wpdb->get_results("SELECT * FROM $table_name where is_active=1 OR is_active=2 order by id DESC limit 1");
         if (count($result) == 1) {
             return $result[0];
         } else {
@@ -98,6 +98,10 @@ class EvAdmin
 			}else if($_POST['post_listElection']=="activate"){
 				$this->updateElectionActive($electionId,1);
 			}else if($_POST['post_listElection']=="deactivate"){
+				$this->updateElectionActive($electionId,0);
+			}else if($_POST['post_listElection']=="openvoting"){
+				$this->updateElectionActive($electionId,2);
+			}else if($_POST['post_listElection']=="closevoting"){
 				$this->updateElectionActive($electionId,0);
 			}
 		}else if(isset($_POST['admin_seat'])){
