@@ -38,8 +38,9 @@ class EC
     }
     function register_ec_menu() {
         add_menu_page('Elections', 'Elections', 'edit_posts', 've_menu_home', array($this, 'load_home'));
-        
-        add_submenu_page("ve_menu_home", "Election Commision", "Election Commision", "activate_plugins", "ve_menu_admin", array($this, 'load_admin'));
+        $admn = new EvAdmin();
+        add_submenu_page("ve_menu_home", "Election Commision", "Election Commision", "activate_plugins", "ve_menu_admin", array($admn, 'loadElectionCommission'));
+        add_submenu_page("ve_menu_home", "Election Commision", "Votes", "activate_plugins", "ve_menu_admin_votes", array($admn, 'loadVotes'));
     }
     
     function load_home() {
@@ -48,13 +49,17 @@ class EC
         $nu = new NormalUser();
     }
     
-    function load_admin() {
+    function load_admin_ec() {
         $adm = new EvAdmin();
-        
+        $adm->loadElectionCommission();
         //$adm->newElectionForm();
-        
-        
     }
+
+    function load_admin_votes(){
+        $adm = new EvAdmin();
+        $adm->loadVotes();
+    }
+
     function loadScripts() {
         
         wp_register_style('VeFormCss', VE_PLUGIN_URL . 'style.css');
