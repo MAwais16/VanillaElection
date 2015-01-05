@@ -149,6 +149,14 @@
     width: 100%;
 }
 
+.nominee>.card>.voted{
+    width: 100%;
+    text-align: center;
+    padding:2px;
+    font-weight: bold;
+    color:green;
+}
+
 .nominee>.card>.username{
     text-align: center;
 } 

@@ -81,6 +81,18 @@ class NormalUser
         }
     }
     
+    function myVote($election_id,$seat_id){
+        $user_id = get_current_user_id();
+        global $wpdb;
+        $table_name = $wpdb->prefix . "ve_votes";
+        $result = $wpdb->get_results("SELECT * FROM $table_name WHERE election_id=$election_id AND seat_id=$seat_id AND user_id=$user_id");
+        if ($wpdb->num_rows > 0) {
+            return $result[0];
+        } else {
+            return false;
+        }
+ 
+    }
     function castVote($election_id, $seat_id, $nomination_id) {
         $user_id = get_current_user_id();
         global $wpdb;
@@ -101,7 +113,7 @@ class NormalUser
     function alreadyVoted($user_id, $election_id, $seat_id) {
         global $wpdb;
         $table_name = $wpdb->prefix . "ve_votes";
-        $result = $wpdb->get_results("SELECT * FROM $table_name WHERE election_id=$election_id AND seat_id=$seat_id AND user_id=$user_id");
+        $result = $wpdb->get_results("SELECT id FROM $table_name WHERE election_id=$election_id AND seat_id=$seat_id AND user_id=$user_id");
         if ($wpdb->num_rows > 0) {
             return true;
         } else {
