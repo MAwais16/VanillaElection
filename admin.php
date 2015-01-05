@@ -33,13 +33,14 @@ class EvAdmin
         global $wpdb;
         $table_nom = $wpdb->prefix . "ve_nominations";
         $table_seats = $wpdb->prefix . "ve_seats";
-        $result = $wpdb->get_results("SELECT * FROM $table_nom join $table_seats on $table_nom.seat_id=$table_seats.id where $table_nom.election_id=$election_id");
+
+        $result =$wpdb->get_results("SELECT *, nom.id as nomination_id, nom.time as nomination_time FROM $table_nom as nom join $table_seats as seat on nom.seat_id=seat.id WHERE nom.election_id=$election_id");
+        //$result = $wpdb->get_results("SELECT * FROM $table_nom join $table_seats on $table_nom.seat_id=$table_seats.id where $table_nom.election_id=$election_id");
         if ($wpdb->num_rows <= 0) {
             $result = false;
         }
         return $result;
     }
-
     function updateSeatNomination($nomination_id,$status){
     	global $wpdb;
 		$table_name = $wpdb->prefix . "ve_nominations";
@@ -56,7 +57,7 @@ class EvAdmin
 		}else{
 			EC::notifyUpdate("Updated rows:$result");
 		}
-		wp_die($wpdb->last_query);
+		
 
     }
 

@@ -6,11 +6,15 @@
         <span></span>
     </h2>
     	<?php
+    	$elec=$this->getLatestActiveElection();
+    	if($elec!==false){
+
+
 
     	echo '<input type="hidden" name="eid" value="'.$elec->id.'"/>';
     	$myNomination =$this->getMyNomination($elec->id);
 		if($myNomination!==false){
-			
+
 			echo '<label><span>Seat Title: '.$myNomination[0]->title.'</label>';
 			echo '<label><span>Status: ';
 			if($myNomination[0]->status=="0"){
@@ -22,6 +26,10 @@
 			echo "<label><span></span><input type='submit' class='button redBorder' value='Cancel My Nomination' /></label>";
 		}else{
 			echo "none";
+		}
+
+		}else{
+			echo "no active election";
 		}
 
 		?>

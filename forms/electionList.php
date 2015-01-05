@@ -32,6 +32,7 @@ foreach ($result as $row) {
     echo "<td>" . $row->id . "</td>" . "<td>" . $row->name . "</td>" . "<td>" . $row->seats . "</td>" . "<td class='cTime'>" . $row->time . "</td>";
     if ($row->is_active == 0) {
         echo "<td><input type='button' value='Activate' onclick='activate($row->id);' class='button'/></td>";
+        echo "<td></td>";
     } else {
         echo "<td><input type='button' value='Deactivate' onclick='deactivate($row->id);' class='button'/></td>";
         if ($row->is_active == 2) {

@@ -11,11 +11,8 @@ class EC
         $this->installDB();
         
         add_action('admin_enqueue_scripts', array($this, 'loadScripts'));
-        
         add_action('admin_menu', array($this, 'register_ec_menu'));
-        
         //$this->addMenus();
-        
         
     }
     
@@ -126,7 +123,7 @@ class EC
         dbDelta($sql3);
         dbDelta($sql4);
         //add update logic later
-
+        
     }
     
     static function notifyUpdate($txt) {

@@ -1,7 +1,7 @@
 <br/>
 <br/>
-<form action="" method="POST" class="basic-grey" id="normal_nominate_form">
-
+<form action="" method="POST" class="basic-grey" id="normal_nominate">
+<input type="hidden" name="normal_nominate" value="add"/>
 <?php
 
 $elec=$this->getLatestActiveElection();

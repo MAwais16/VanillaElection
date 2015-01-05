@@ -1,31 +1,36 @@
 <br/><br/><div>
-	<form action="" method="POST" class="basic-grey" id="admin_nomnee_form">
-		<input type="hidden" name="admin_nominees" value="1" id="admin_nominees"/>
+    <form action="" method="POST" class="basic-grey" id="admin_nomnee_form">
+        <input type="hidden" name="admin_nominees" value="1" id="admin_nominees"/>
         <input type="hidden" name="admin_nominee_id" value="1" id="admin_nominee_id"/>
 
 <?php
-    $election= $this->getLatestActiveElection();
-    if($election!==false){
-        $nominations=$this->getNominations($election->id);
-        echo "<h1>Nominees<span>Nominees for: ".$election->name."</span></h1>";
-        echo "<table class='customTable'>";
-        foreach($nominations as $nominee){
+$election = $this->getLatestActiveElection();
+if ($election !== false) {
+    $nominations = $this->getNominations($election->id);
+    echo "<h1>Nominees<span>Nominees for: " . $election->name . "</span></h1>";
+    echo "<table class='customTable'>";
+    if ($nominations !== false) {
+
+        foreach ($nominations as $nominee) {
             echo "<tr>";
-            $nomineeData=get_userdata($nominee->user_id);
-            echo "<td>".get_avatar( $nominee->user_id, 32 )."</td>";
+            $nomineeData = get_userdata($nominee->user_id);
+            echo "<td>" . get_avatar($nominee->user_id, 32) . "</td>";
             echo "<td>$nomineeData->first_name $nomineeData->last_name</td>";
             echo "<td>$nominee->title</td>";
-            if($nominee->status=="0"){
+            if ($nominee->status == "0") {
                 echo "<td>pending</td>";
-                echo "<td><button class='button' onclick='admin_acceptNominee(".$nominee->id.")'>Accept</button></td>";
-            }else{
+                echo "<td><button class='button' onclick='admin_acceptNominee(" . $nominee->nomination_id . ")'>Accept</button></td>";
+            } else {
                 echo "<td>Accepted</td>";
-                echo "<td><button class='button' onclick='admin_rejectNominee(".$nominee->id.")'>Reject</button></td>";
+                echo "<td><button class='button' onclick='admin_rejectNominee(" . $nominee->nomination_id . ")'>Reject</button></td>";
             }
             echo "</tr>";
         }
         echo "</table>";
     }
+}else{
+    echo "no active election.";
+}
 ?> 
 </form></div>
 <script type='text/javascript'>

@@ -7,7 +7,7 @@ class NormalUser
         $this->requestHandler();
         
         include (VE_PLUGIN_PATH . "forms/electionNominations.php");
-
+        
         include (VE_PLUGIN_PATH . "forms/myNomination.php");
         include (VE_PLUGIN_PATH . "forms/nominateMe.php");
     }
@@ -58,7 +58,7 @@ class NormalUser
                 } else {
                     EC::notifyError("Unable to nominate");
                 }
-            } else if($_POST['normal_nominate'] == "delete") {
+            } else if ($_POST['normal_nominate'] == "delete") {
                 
                 $eid = $_POST['eid'];
                 
@@ -71,22 +71,42 @@ class NormalUser
                     EC::notifyUpdate("Updated rows:$result");
                 }
             }
-        }else if (isset($_POST['normal_castvote'])) {
-           if ($_POST['normal_castvote'] == "castevote") { 
-                $electionId=$_POST['normal_electionId'];
-                $seatId=$_POST['normal_seatId'];
-                $nominationId=$_POST['normal_nominationId'];
-           }
+        } else if (isset($_POST['normal_castvote'])) {
+            if ($_POST['normal_castvote'] == "castvote") {
+                $election_id = $_POST['normal_electionId'];
+                $seat_id = $_POST['normal_seatId'];
+                $nomination_id = $_POST['normal_nominationId'];
+                $this->castVote($election_id,$seat_id,$nomination_id);
+            }
         }
     }
-
-    function castVote($election_id,$seat_id,$nomination_id){
-
-
-    }
-
-    function alreadyVoted($election_id,$seat_id,$nomination_id){
+    
+    function castVote($election_id, $seat_id, $nomination_id) {
+        $user_id = get_current_user_id();
+        global $wpdb;
+        $table_name = $wpdb->prefix . "ve_votes";
         
+        if (!$this->alreadyVoted($user_id, $election_id, $seat_id)) {
+            $wpdb->insert($table_name, array('seat_id' => $seat_id, 'election_id' => $election_id, 'user_id' => $user_id, 'nomination_id' => $nomination_id));
+            if ($wpdb->insert_id > 0) {
+                EC::notifyUpdate("Vote casted successfully.");
+            } else {
+                EC::notifyError("Error: Unable to cast.");
+            }
+        } else {
+            EC::notifyError("Already Voted!");
+        }
+    }
+    
+    function alreadyVoted($user_id, $election_id, $seat_id) {
+        global $wpdb;
+        $table_name = $wpdb->prefix . "ve_votes";
+        $result = $wpdb->get_results("SELECT * FROM $table_name WHERE election_id=$election_id AND seat_id=$seat_id AND user_id=$user_id");
+        if ($wpdb->num_rows > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
     
     function getElectionNominations($election_id, $seat_id) {
@@ -106,7 +126,7 @@ class NormalUser
         
         global $wpdb;
         $table_name = $wpdb->prefix . "ve_elections";
-        $result = $wpdb->get_results("SELECT * FROM $table_name where is_active=1 && id=$id");
+        $result = $wpdb->get_results("SELECT * FROM $table_name where is_active=1 AND id=$id");
         if ($result) {
             $nom = trim($result[0]->nomination);
             
