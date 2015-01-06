@@ -10,6 +10,7 @@ $elec = $this->getLatestActiveElection();
 if ($elec !== false) {
     $electionSeats = $this->getSeats($elec->seats);
     foreach ($electionSeats as $seat) {
+    $alreadyVoted=$this->alreadyVoted(get_current_user_id(), $elec->id, $seat->id);
 ?>
 	<h2><?php
         echo $seat->title; ?>
@@ -24,6 +25,7 @@ if ($elec !== false) {
         } else {
             $myVote=$this->myVote($elec->id,$seat->id);
 
+
             echo "<div class='nominee'>";
             foreach ($result as $nomination) {
                 echo "<div class='card'>";
@@ -32,12 +34,16 @@ if ($elec !== false) {
                 echo "<div class='name'>" . $nomineeData->first_name . " " . $nomineeData->last_name . "</div>";
                 echo "<div class='username'> user:" . $nomineeData->user_login . "</div>";
                 if ($elec->is_active == 2) {
-                    if($myVote!==false && ($myVote->nomination_id==$nomination->id)){
-                        echo "<div class='voted'> You Voted! </div>";
+                    if($alreadyVoted){
+                        if($myVote!==false && ($myVote->nomination_id==$nomination->id)){
+                            echo "<div class='voted'> You Voted him! </div>";
+                        }else{
+                            echo "<div class='voted'>&nbsp;</div>";
+                        }
                     }else{
-                        echo "<button class='button' onclick='castVote($seat->id,$elec->id,$nomination->id);'> Vote </button>";
+                            echo "<button class='button' onclick='castVote($seat->id,$elec->id,$nomination->id);'> Vote </button>";
                     }
-                    
+
                 }
                 echo "</div>";
             }
