@@ -13,27 +13,19 @@ class EC
         add_action('admin_enqueue_scripts', array($this, 'loadScripts'));
         add_action('admin_menu', array($this, 'register_ec_menu'));
         //$this->addMenus();
-        
     }
     
     function addMenus() {
-        
         $author = wp_get_current_user();
         if (isset($author->roles[0])) {
             $current_role = $author->roles[0];
         } else {
             $current_role = 'no_role';
-            
             //wp_die('ouch! something wrong?');
-            
         }
         if ($current_role == 'administrator') {
-            
             // add settings as well
-            
-            
         }
-        
         add_action('admin_menu', array($this, 'register_ec_menu'));
     }
     function register_ec_menu() {
@@ -49,17 +41,6 @@ class EC
         $nu = new NormalUser();
     }
     
-    function load_admin_ec() {
-        $adm = new EvAdmin();
-        $adm->loadElectionCommission();
-        //$adm->newElectionForm();
-    }
-
-    function load_admin_votes(){
-        $adm = new EvAdmin();
-        $adm->loadVotes();
-    }
-
     function loadScripts() {
         
         wp_register_style('VeFormCss', VE_PLUGIN_URL . 'style.css');
@@ -118,6 +99,7 @@ class EC
             seat_id int NOT NULL,
             election_id int NOT NULL,
             nomination_id int NOT NULL,
+            status tinyint(1) DEFAULT 0,
             PRIMARY KEY  (election_id,user_id,seat_id)
             ) $charset_collate;";
 

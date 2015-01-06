@@ -10,6 +10,7 @@ class EvAdmin
         
         //$this->newElectionForm();
         
+        
     }
     
     function loadElectionCommission() {
@@ -18,16 +19,47 @@ class EvAdmin
         include (VE_PLUGIN_PATH . "forms/electionList.php");
         include (VE_PLUGIN_PATH . "forms/nominees.php");
     }
+    
+    function loadVotes() {
+        // $votes = $this->getVoteCount(4, 2);
+        // echo $votes->count;
 
-    function loadVotes(){
-    	echo "vote screen";
+        include (VE_PLUGIN_PATH . "forms/votes.php");
+    }
+
+    function getSeats($seatIds) {
+        global $wpdb;
+        $table_name = $wpdb->prefix . "ve_seats";
+        return $wpdb->get_results("SELECT * FROM $table_name where id IN ($seatIds);");
+    }
+
+    function getElectionNominations($election_id, $seat_id) {
+        global $wpdb;
+        $table_name = $wpdb->prefix . "ve_nominations";
+        $result = $wpdb->get_results("SELECT * FROM $table_name WHERE status=1 AND election_id=$election_id AND seat_id=$seat_id");
+        if ($wpdb->num_rows <= 0) {
+            $result = false;
+        }
+        return $result;
     }
     
+    function getVoteCount($election_id, $seat_id) {
+        global $wpdb;
+        $table_name = $wpdb->prefix . "ve_votes";
+        $result = $wpdb->get_results("SELECT COUNT(id) AS count FROM $table_name where election_id=$election_id AND seat_id=$seat_id");
+        return $result[0]->count;
+    }
+    function getVoteCountForNomination($election_id, $nomination_id) {
+    	global $wpdb;
+        $table_name = $wpdb->prefix . "ve_votes";
+        $result = $wpdb->get_results("SELECT COUNT(id) AS count FROM $table_name where election_id=$election_id AND nomination_id=$nomination_id");
+        return $result[0]->count;
+    }
     function getLatestActiveElection() {
         global $wpdb;
         $table_name = $wpdb->prefix . "ve_elections";
         $result = $wpdb->get_results("SELECT * FROM $table_name where is_active=1 OR is_active=2 order by id DESC limit 1");
-        if (count($result) == 1) {
+        if(count($result) == 1) {
             return $result[0];
         } else {
             return false;
