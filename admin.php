@@ -55,6 +55,16 @@ class EvAdmin
         $result = $wpdb->get_results("SELECT COUNT(id) AS count FROM $table_name where election_id=$election_id AND nomination_id=$nomination_id");
         return $result[0]->count;
     }
+    function getVotesForNomination($nomination_id){
+        global $wpdb;
+        $table_name = $wpdb->prefix . "ve_votes";
+        $result = $wpdb->get_results("SELECT * FROM $table_name WHERE nomination_id=$nomination_id");
+        if ($wpdb->num_rows <= 0) {
+            $result = false;
+        }
+        return $result;
+
+    }
     function getLatestActiveElection() {
         global $wpdb;
         $table_name = $wpdb->prefix . "ve_elections";

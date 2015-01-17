@@ -23,6 +23,18 @@ class NormalUser
         }
     }
     
+    function getElection($election_id) {
+        global $wpdb;
+        $table_name = $wpdb->prefix . "ve_elections";
+        $result = $wpdb->get_results($wpdb->prepare("SELECT * FROM $table_name where id= %d ", $election_id));
+        
+        if ($wpdb->num_rows == 1) {
+            return $result[0];
+        } else {
+            return false;
+        }
+    }
+    
     function getMyNomination($election_id) {
         global $wpdb;
         $table_nom = $wpdb->prefix . "ve_nominations";
@@ -59,16 +71,20 @@ class NormalUser
                     EC::notifyError("Unable to nominate");
                 }
             } else if ($_POST['normal_nominate'] == "delete") {
-                
                 $eid = $_POST['eid'];
+                $elec = $this->getElection($eid);
                 
-                $table_name = $wpdb->prefix . "ve_nominations";
-                $sql = $wpdb->prepare("delete FROM $table_name WHERE election_id = %d AND user_id= %d", $eid, $user_id);
-                $result = $wpdb->query($sql);
-                if ($result === false) {
-                    EC::notifyError("Error!" . $wpdb->print_error());
-                } else {
-                    EC::notifyUpdate("Updated rows:$result");
+                if ($elec && $elec->is_active != 2) {
+                    $table_name = $wpdb->prefix . "ve_nominations";
+                    $sql = $wpdb->prepare("delete FROM $table_name WHERE election_id = %d AND user_id= %d ", $eid, $user_id);
+                    $result = $wpdb->query($sql);
+                    if ($result === false) {
+                        EC::notifyError("Error!" . $wpdb->print_error());
+                    } else {
+                        EC::notifyUpdate("Updated rows:$result");
+                    }
+                }else{
+                    EC::notifyError("Error! can't cancel nomination in this phase");
                 }
             }
         } else if (isset($_POST['normal_castvote'])) {
@@ -76,12 +92,12 @@ class NormalUser
                 $election_id = $_POST['normal_electionId'];
                 $seat_id = $_POST['normal_seatId'];
                 $nomination_id = $_POST['normal_nominationId'];
-                $this->castVote($election_id,$seat_id,$nomination_id);
+                $this->castVote($election_id, $seat_id, $nomination_id);
             }
         }
     }
     
-    function myVote($election_id,$seat_id){
+    function myVote($election_id, $seat_id) {
         $user_id = get_current_user_id();
         global $wpdb;
         $table_name = $wpdb->prefix . "ve_votes";
@@ -91,7 +107,6 @@ class NormalUser
         } else {
             return false;
         }
- 
     }
     function castVote($election_id, $seat_id, $nomination_id) {
         $user_id = get_current_user_id();

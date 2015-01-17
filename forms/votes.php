@@ -33,11 +33,13 @@ if ($elec !== false) {
                 $nomineeData = get_userdata($nomination->user_id);
                 echo "<div class='name'>" . $nomineeData->first_name . " " . $nomineeData->last_name . "</div>";
                 echo "<div class='username'> user:" . $nomineeData->user_login . "</div>";
-                $candidateVotes=$this->getVoteCountForNomination($elec->id, $nomination->id);
+                $candidateVotes = $this->getVoteCountForNomination($elec->id, $nomination->id);
                 echo "<div class='voted'> Votes: $candidateVotes </div>";
                 
                 echo "</div>";
-                 //card
+                
+                //card
+                
                 
             }
             echo "<div style='clear:both;'></div>";
@@ -45,15 +47,55 @@ if ($elec !== false) {
         }
         echo "<hr style='padding:5px;'/>";
     }
-     //foreach seats
+    
+    //foreach seats
+    
     
 }
- //if
+
+//if
 else {
     echo "no election";
 }
 ?>
 </form>
+
+
+<div class="basic-grey">
+
+<?php
+$elec = $this->getLatestActiveElection();
+if ($elec !== false) {
+    $nomination = $this->getNominations($elec->id);
+    if ($nomination) {
+        echo "<div>";
+        foreach ($nomination as $nom) {
+            echo "<div>";
+            $nomineeData = get_userdata($nom->user_id);
+            echo "<div>$nom->title</div>";
+            echo "<div>" . $nomineeData->first_name . " " . $nomineeData->last_name . "</div>";
+            $votes = $this->getVotesForNomination($nom->nomination_id);
+            if ($votes) {
+                echo "<ol>";
+                foreach ($votes as $vote) {
+                    $voter = get_userdata($vote->user_id);
+                    echo "<li>" . $voter->first_name . " " . $voter->last_name . "</li>";
+                }
+                echo "</ol>";
+            }
+            echo "</div><ht/>";
+
+        }
+        echo "</div><div style='clear:both;'></div>";
+    }else{
+        echo "no nominations";
+    }
+}
+?>
+
+
+</div>
+
 
 <script type="text/javascript">
     function castVote(seatId,electionId,nominationId){
