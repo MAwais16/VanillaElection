@@ -7,8 +7,12 @@
 $elec=$this->getLatestActiveElection();
     if($elec!==false && $elec->is_active==1){
         echo "<h1>".$elec->name."<span>You can nominate yourself for one post only.</span></h1>";
-
+        
         $electionSeats=$this->getSeats($elec->seats);
+        global $wpdb;
+        echo "q=".$wpdb->last_query;
+        
+        
 
         echo '<input type="hidden" name="eid" value="'.$elec->id.'"/>';
         echo "<label>

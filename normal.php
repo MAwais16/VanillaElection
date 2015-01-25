@@ -49,8 +49,9 @@ class NormalUser
     
     function getSeats($seatIds) {
         global $wpdb;
+        //$seatIds="(".$seatIds.")";
         $table_name = $wpdb->prefix . "ve_seats";
-        return $wpdb->get_results($wpdb->prepare("SELECT * FROM $table_name where id IN (%d);",$seatIds));
+        return $wpdb->get_results($wpdb->prepare("SELECT * FROM $table_name where id IN %s;",$seatIds));
     }
     
     function requestHandler() {

@@ -31,7 +31,7 @@ class EvAdmin
         global $wpdb;
         $table_name = $wpdb->prefix . "ve_seats";
 
-        $sql = $wpdb->prepare("SELECT * FROM $table_name where id IN (%d);", $seatIds);
+        $sql = $wpdb->prepare("SELECT * FROM $table_name where id IN (%s);", $seatIds);
         return $wpdb->get_results($sql);
     }
 
