@@ -40,7 +40,7 @@ class NormalUser
         $table_nom = $wpdb->prefix . "ve_nominations";
         $table_seats = $wpdb->prefix . "ve_seats";
         $user_id = get_current_user_id();
-        $result = $wpdb->get_results("SELECT * FROM $table_nom join $table_seats on $table_nom.seat_id=$table_seats.id where $table_nom.user_id=$user_id AND $table_nom.election_id=$election_id");
+        $result = $wpdb->get_results($wpdb->prepare("SELECT * FROM $table_nom join $table_seats on $table_nom.seat_id=$table_seats.id where $table_nom.user_id=%d AND $table_nom.election_id=%d", $user_id,$election_id));
         if ($wpdb->num_rows <= 0) {
             $result = false;
         }
@@ -50,7 +50,7 @@ class NormalUser
     function getSeats($seatIds) {
         global $wpdb;
         $table_name = $wpdb->prefix . "ve_seats";
-        return $wpdb->get_results("SELECT * FROM $table_name where id IN ($seatIds);");
+        return $wpdb->get_results($wpdb->prepare("SELECT * FROM $table_name where id IN (%d);",$seatIds));
     }
     
     function requestHandler() {
@@ -101,7 +101,8 @@ class NormalUser
         $user_id = get_current_user_id();
         global $wpdb;
         $table_name = $wpdb->prefix . "ve_votes";
-        $result = $wpdb->get_results("SELECT * FROM $table_name WHERE election_id=$election_id AND seat_id=$seat_id AND user_id=$user_id");
+        $sql=$wpdb->prepare("SELECT * FROM $table_name WHERE election_id=%d AND seat_id=%d AND user_id=%d",$election_id,$seat_id,$user_id);
+        $result = $wpdb->get_results($sql);
         if ($wpdb->num_rows > 0) {
             return $result[0];
         } else {
@@ -128,7 +129,8 @@ class NormalUser
     function alreadyVoted($user_id, $election_id, $seat_id) {
         global $wpdb;
         $table_name = $wpdb->prefix . "ve_votes";
-        $result = $wpdb->get_results("SELECT id FROM $table_name WHERE election_id=$election_id AND seat_id=$seat_id AND user_id=$user_id");
+        $sql=$wpdb->prepare("SELECT id FROM $table_name WHERE election_id=%d AND seat_id=%d AND user_id=%d",$election_id,$seat_id,$user_id);
+        $result = $wpdb->get_results($sql);
         if ($wpdb->num_rows > 0) {
             return true;
         } else {
@@ -139,7 +141,8 @@ class NormalUser
     function getElectionNominations($election_id, $seat_id) {
         global $wpdb;
         $table_name = $wpdb->prefix . "ve_nominations";
-        $result = $wpdb->get_results("SELECT * FROM $table_name WHERE status=1 AND election_id=$election_id AND seat_id=$seat_id");
+        $sql=$wpdb->prepare("SELECT * FROM $table_name WHERE status=1 AND election_id=%d AND seat_id=%d",$election_id,$seat_id);
+        $result = $wpdb->get_results($sql);
         if ($wpdb->num_rows <= 0) {
             $result = false;
         }
@@ -153,7 +156,8 @@ class NormalUser
         
         global $wpdb;
         $table_name = $wpdb->prefix . "ve_elections";
-        $result = $wpdb->get_results("SELECT * FROM $table_name where is_active=1 AND id=$id");
+        $sql=$wpdb->prepare("SELECT * FROM $table_name where is_active=1 AND id=%d",$id);
+        $result = $wpdb->get_results($sql);
         if ($result) {
             $nom = trim($result[0]->nomination);
             

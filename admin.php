@@ -30,13 +30,16 @@ class EvAdmin
     function getSeats($seatIds) {
         global $wpdb;
         $table_name = $wpdb->prefix . "ve_seats";
-        return $wpdb->get_results("SELECT * FROM $table_name where id IN ($seatIds);");
+
+        $sql = $wpdb->prepare("SELECT * FROM $table_name where id IN (%d);", $seatIds);
+        return $wpdb->get_results($sql);
     }
 
     function getElectionNominations($election_id, $seat_id) {
         global $wpdb;
         $table_name = $wpdb->prefix . "ve_nominations";
-        $result = $wpdb->get_results("SELECT * FROM $table_name WHERE status=1 AND election_id=$election_id AND seat_id=$seat_id");
+        $sql = $wpdb->prepare("SELECT * FROM $table_name WHERE status=1 AND election_id=%d AND seat_id=%d",$election_id ,$seat_id);
+        $result = $wpdb->get_results($sql);
         if ($wpdb->num_rows <= 0) {
             $result = false;
         }
@@ -46,19 +49,22 @@ class EvAdmin
     function getVoteCount($election_id, $seat_id) {
         global $wpdb;
         $table_name = $wpdb->prefix . "ve_votes";
-        $result = $wpdb->get_results("SELECT COUNT(id) AS count FROM $table_name where election_id=$election_id AND seat_id=$seat_id");
+        $sql = $wpdb->prepare("SELECT COUNT(id) AS count FROM $table_name where election_id=%d AND seat_id=%d", $election_id,$seat_id);
+        $result = $wpdb->get_results($sql);
         return $result[0]->count;
     }
     function getVoteCountForNomination($election_id, $nomination_id) {
     	global $wpdb;
         $table_name = $wpdb->prefix . "ve_votes";
-        $result = $wpdb->get_results("SELECT COUNT(id) AS count FROM $table_name where election_id=$election_id AND nomination_id=$nomination_id");
+        $sql = $wpdb->prepare("SELECT COUNT(id) AS count FROM $table_name where election_id=%d AND nomination_id=%d",$election_id,$nomination_id );
+        $result = $wpdb->get_results($sql);
         return $result[0]->count;
     }
     function getVotesForNomination($nomination_id){
         global $wpdb;
         $table_name = $wpdb->prefix . "ve_votes";
-        $result = $wpdb->get_results("SELECT * FROM $table_name WHERE nomination_id=$nomination_id");
+        $sql = $wpdb->prepare("SELECT * FROM $table_name WHERE nomination_id=%d",$nomination_id);
+        $result = $wpdb->get_results($sql);
         if ($wpdb->num_rows <= 0) {
             $result = false;
         }
@@ -80,8 +86,8 @@ class EvAdmin
         global $wpdb;
         $table_nom = $wpdb->prefix . "ve_nominations";
         $table_seats = $wpdb->prefix . "ve_seats";
-        
-        $result = $wpdb->get_results("SELECT *, nom.id as nomination_id, nom.time as nomination_time FROM $table_nom as nom join $table_seats as seat on nom.seat_id=seat.id WHERE nom.election_id=$election_id");
+        $sql = $wpdb->prepare("SELECT *, nom.id as nomination_id, nom.time as nomination_time FROM $table_nom as nom join $table_seats as seat on nom.seat_id=seat.id WHERE nom.election_id=%d",$election_id);
+        $result = $wpdb->get_results($sql);
         
         //$result = $wpdb->get_results("SELECT * FROM $table_nom join $table_seats on $table_nom.seat_id=$table_seats.id where $table_nom.election_id=$election_id");
         if ($wpdb->num_rows <= 0) {
