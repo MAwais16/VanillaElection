@@ -1,6 +1,7 @@
 <?php
 namespace Fotaxis;
 
+
 class EvAdmin
 {
     
@@ -14,6 +15,8 @@ class EvAdmin
     }
     
     function loadElectionCommission() {
+
+        var_dump(\WP_ve_elections::find(1));
         include (VE_PLUGIN_PATH . "forms/seat.php");
         include (VE_PLUGIN_PATH . "forms/newElection.php");
         include (VE_PLUGIN_PATH . "forms/electionList.php");
