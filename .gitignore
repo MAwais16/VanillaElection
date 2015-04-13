@@ -1,2 +1,2 @@
-./php-activerecord/example/*
-./php-activerecord/test/*
+/php-activerecord/examples/*
+/php-activerecord/test/*
