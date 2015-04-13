@@ -7,8 +7,25 @@ class EC
 {
     
     function __construct() {
+
+
         
         $this->installDB();
+
+        \ActiveRecord\Config::initialize(
+            function ( $cfg ) {
+                $cfg->set_model_directory( VE_PLUGIN_PATH."models/" );
+                $cfg->set_connections(
+                    array(
+                        'wp' => sprintf( 'mysql://%s:%s@%s/%s?charset=%s', DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, DB_CHARSET ),
+                    )
+                );
+
+                $cfg->set_default_connection( 'wp' );
+            }
+        );
+
+
         
         add_action('admin_enqueue_scripts', array($this, 'loadScripts'));
         add_action('admin_menu', array($this, 'register_ec_menu'));
@@ -76,6 +93,13 @@ class EC
             title text NOT NULL,
             UNIQUE KEY id (id)
             ) $charset_collate;";
+
+        $table_name = $wpdb->prefix . "ve_elections_seats";
+        $sql5 = "CREATE TABLE IF NOT EXISTS $table_name (
+            election_id int NOT NULL,
+            seat_id int NOT NULL,
+            PRIMARY KEY  (election_id,seat_id)
+            ) $charset_collate;";
         
         $table_name = $wpdb->prefix . "ve_nominations";
         $sql3 = "CREATE TABLE IF NOT EXISTS $table_name (
@@ -96,11 +120,11 @@ class EC
             id int NOT NULL AUTO_INCREMENT UNIQUE,
             time timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
             user_id int NOT NULL,
-            seat_id int NOT NULL,
+            /*seat_id int NOT NULL,*/
             election_id int NOT NULL,
             nomination_id int NOT NULL,
             status tinyint(1) DEFAULT 0,
-            PRIMARY KEY  (election_id,user_id,seat_id)
+            PRIMARY KEY  (election_id,user_id,nomination_id)
             ) $charset_collate;";
 
         require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
@@ -109,6 +133,7 @@ class EC
         dbDelta($sql2);
         dbDelta($sql3);
         dbDelta($sql4);
+        dbDelta($sql5);
         //add update logic later
         
     }

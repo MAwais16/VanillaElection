@@ -14,23 +14,13 @@ define( 'VE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 require_once dirname( __file__ ) . '/php-activerecord/ActiveRecord.php';
 
+
+
+
+
 require_once (VE_PLUGIN_PATH."ec.php");
 use \Fotaxis\EC;
-
-ActiveRecord\Config::initialize(
-    function ( $cfg ) {
-        $cfg->set_model_directory( VE_PLUGIN_PATH."models/" );
-        $cfg->set_connections(
-            array(
-                'wp' => sprintf( 'mysql://%s:%s@%s/%s?charset=%s', DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, DB_CHARSET ),
-            )
-        );
-
-        $cfg->set_default_connection( 'wp' );
-    }
-);
-
-class WP_ve_elections extends ActiveRecord\Model {};
+//require_once( VE_PLUGIN_PATH."models/models.php" );
 
 
 add_action('init','construct_my_class');

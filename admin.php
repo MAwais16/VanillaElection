@@ -15,8 +15,6 @@ class EvAdmin
     }
     
     function loadElectionCommission() {
-
-        var_dump(\WP_ve_elections::find(1));
         include (VE_PLUGIN_PATH . "forms/seat.php");
         include (VE_PLUGIN_PATH . "forms/newElection.php");
         include (VE_PLUGIN_PATH . "forms/electionList.php");
@@ -124,6 +122,7 @@ class EvAdmin
     }
     
     function requestHandler() {
+        
         global $wpdb;
         
         if (isset($_POST['post_newElection']) && $_POST['post_newElection'] == 1) {
