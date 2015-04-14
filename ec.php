@@ -12,6 +12,7 @@ class EC
         
         $this->installDB();
 
+
         \ActiveRecord\Config::initialize(
             function ( $cfg ) {
                 $cfg->set_model_directory( VE_PLUGIN_PATH."models/" );
@@ -24,8 +25,6 @@ class EC
                 $cfg->set_default_connection( 'wp' );
             }
         );
-
-
         
         add_action('admin_enqueue_scripts', array($this, 'loadScripts'));
         add_action('admin_menu', array($this, 'register_ec_menu'));

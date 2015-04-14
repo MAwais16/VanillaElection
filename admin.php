@@ -122,6 +122,8 @@ class EvAdmin
     }
     
     function requestHandler() {
+        try{
+
         
         global $wpdb;
         
@@ -154,24 +156,20 @@ class EvAdmin
         } else if (isset($_POST['admin_seat'])) {
             
             if ($_POST['admin_seat'] == "addseat") {
-                $title = $_POST['title'];
-                $table_name = $wpdb->prefix . "ve_seats";
-                $wpdb->insert($table_name, array('title' => $title));
-                if ($wpdb->insert_id > 0) {
-                    EC::notifyUpdate("Saved");
-                } else {
-                    EC::notifyError("Something went wrong!");
-                }
+                
+                $attributes = array('title' => $_POST['title']);
+                $seat = new \WP_ve_seat($attributes);
+                if($seat->save()){
+                    EC::notifyUpdate("Saved:".$seat->id);
+                }   
+
             } else if ($_POST['admin_seat'] == "delete") {
                 $deletId = $_POST['admin_seat_id'];
-                $table_name = $wpdb->prefix . "ve_seats";
                 
-                $sql = $wpdb->prepare("delete FROM $table_name WHERE id = %d", $deletId);
-                $result = $wpdb->query($sql);
-                if ($result === false) {
-                    EC::notifyError("Error!" . $wpdb->print_error());
-                } else {
-                    EC::notifyUpdate("Updated rows:$result");
+                $seat = \WP_ve_seat::find($deletId);
+                
+                if($seat->delete()){
+                    EC::notifyUpdate("Seat Deleted:".$seat->id);
                 }
             }
         } else if (isset($_POST['admin_nominees'])) {
@@ -180,6 +178,10 @@ class EvAdmin
             } else if ($_POST['admin_nominees'] == "reject") {
                 $this->updateSeatNomination($_POST['admin_nominee_id'], 0);
             }
+        }
+
+        }catch(\ActiveRecord\ActiveRecordException $e){
+             EC::notifyError("Error!" . $e->getMessage());
         }
     }
     

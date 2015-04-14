@@ -26,9 +26,9 @@
 	<input type="hidden" name="admin_seat_id" value="0" id="admin_seat_id"/>
 <table class="customTable">
 	<?php
-		$result=$this->getAllSeats(); //admin.php
+		//$result=$this->getAllSeats(); //admin.php
+		$result=\WP_ve_seat::find('all');
 		if($result){
-			
 			foreach ($result as $seat) {
 				echo "<tr>";
 				echo "<td>".$seat->id."</td>";
